@@ -4,10 +4,9 @@ from sqlalchemy.orm import sessionmaker, Session
 from typing import Generator
 
 # Get database URL from environment variable or use default
-DATABASE_URL = os.getenv(
-    "DATABASE_URL",
-    "postgresql://inteliscrap_user:inteliscrap_password@postgres:5432/inteliscrap_db"
-)
+DATABASE_URL = os.getenv("DATABASE_URL")
+if not DATABASE_URL:
+    raise RuntimeError("DATABASE_URL environment variable is not set. Please configure your database connection string.")
 
 # Create the SQLAlchemy engine
 engine = create_engine(
