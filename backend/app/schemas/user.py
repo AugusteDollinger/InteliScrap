@@ -1,6 +1,6 @@
 from pydantic import BaseModel, ConfigDict
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 
 
 class UserResponse(BaseModel):
@@ -12,3 +12,10 @@ class UserResponse(BaseModel):
     email: str
     username: str
     created_at: Optional[datetime] = None
+
+
+class UsersListResponse(BaseModel):
+    """Pydantic model for users list response."""
+    
+    count: int
+    users: List[UserResponse]

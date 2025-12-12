@@ -1,3 +1,3 @@
-from .user import UserResponse
+from .user import UserResponse, UsersListResponse
 
-__all__ = ["UserResponse"]
+__all__ = ["UserResponse", "UsersListResponse"]
