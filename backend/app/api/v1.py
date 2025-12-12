@@ -20,4 +20,9 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
     user = userService.get_user_by_id(db, user_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-    return user
+    return {
+        "id": user.id,
+        "email": user.email,
+        "username": user.username,
+        "created_at": user.created_at.isoformat() if user.created_at else None
+    }
