@@ -1,0 +1,1 @@
+docker compose -f ./infra-inteliscrap/docker-compose.yml exec frontend "$@"

@@ -1,0 +1,21 @@
+@use '../../styles.scss' as *;
+
+.home {
+  padding: 5px 15px;
+  position: relative;
+  width: fit-content;
+  background: alpha-color($electric, 0.25);
+  border-width: 1px;
+  border-color: alpha-color($electric, 0.5); // $electric with 50% opacity
+  border-radius: 15px;
+  border-style: solid;
+
+  &__title {
+    color: $electric;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    margin: 0;
+    height: fit-content;
+  }
+}
