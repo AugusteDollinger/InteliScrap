@@ -28,8 +28,11 @@ services:
     environment:
       - PYTHONDONTWRITEBYTECODE=1
       - PYTHONUNBUFFERED=1
+      - DATABASE_URL=postgresql://inteliscrap_user:inteliscrap_password@postgres:5432/inteliscrap_db
     volumes:
       - ../backend:/app
+    depends_on:
+      - postgres
     command: >
       sh -c "pip install --no-cache-dir -r requirements.txt && \
              uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
