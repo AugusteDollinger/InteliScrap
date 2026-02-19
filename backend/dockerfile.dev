@@ -1,10 +1,14 @@
-FROM python:latest
+# Image officielle Playwright — contient Chromium + toutes les libs système
+FROM mcr.microsoft.com/playwright/python:v1.58.0-noble
 
 WORKDIR /app
 
 RUN pip install --upgrade pip
 COPY requirements.txt .
 RUN pip install -r requirements.txt
+
+# Installe le navigateur Chromium pour Playwright
+RUN playwright install chromium
 
 COPY . .
 
