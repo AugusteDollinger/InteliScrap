@@ -1,0 +1,116 @@
+@use '../../../styles.scss' as *;
+
+.login {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 16px;
+
+  &__card {
+    width: 100%;
+    max-width: 400px;
+    background: alpha-color($dark, 0.8);
+    border: 1px solid alpha-color($electric, 0.2);
+    border-radius: 12px;
+    padding: 40px 36px;
+    backdrop-filter: blur(10px);
+  }
+
+  &__title {
+    margin: 0 0 6px;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: $soft;
+  }
+
+  &__subtitle {
+    margin: 0 0 32px;
+    font-size: 0.9rem;
+    color: alpha-color($soft, 0.5);
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  &__label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: alpha-color($soft, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  &__input {
+    padding: 10px 14px;
+    background: alpha-color($midnight, 0.8);
+    border: 1px solid alpha-color($electric, 0.15);
+    border-radius: 6px;
+    color: $soft;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+
+    &::placeholder {
+      color: alpha-color($soft, 0.3);
+    }
+
+    &:focus {
+      border-color: alpha-color($electric, 0.5);
+    }
+  }
+
+  &__error {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #f87171;
+  }
+
+  &__submit {
+    margin-top: 8px;
+    padding: 11px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    @include cyber-gradient();
+    color: #fff;
+    transition: opacity 0.2s, transform 0.2s;
+
+    &:hover:not(:disabled) {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  &__footer {
+    margin: 24px 0 0;
+    text-align: center;
+    font-size: 0.875rem;
+    color: alpha-color($soft, 0.5);
+  }
+
+  &__link {
+    color: $electric;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
