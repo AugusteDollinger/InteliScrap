@@ -1,0 +1,14 @@
+@use '../../styles.scss' as *;
+
+.layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  &__main {
+    flex: 1;
+    padding-top: 56px; // offset for fixed navbar
+    display: flex;
+    flex-direction: column;
+  }
+}

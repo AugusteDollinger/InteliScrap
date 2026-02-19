@@ -1,0 +1,80 @@
+@use '../../styles.scss' as *;
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  background: alpha-color($dark, 0.95);
+  border-bottom: 1px solid alpha-color($electric, 0.2);
+  backdrop-filter: blur(10px);
+
+  &__brand {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: $electric;
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    transition: opacity 0.2s;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  &__links {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  &__link {
+    color: alpha-color($soft, 0.7);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+
+    &:hover,
+    &--active {
+      color: $electric;
+    }
+  }
+
+  &__btn {
+    padding: 6px 18px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: none;
+
+    &--primary {
+      @include cyber-gradient();
+      color: #fff;
+
+      &:hover {
+        @include cyber-gradient(0.85);
+        transform: translateY(-1px);
+      }
+    }
+
+    &--outline {
+      background: transparent;
+      color: alpha-color($soft, 0.7);
+      border: 1px solid alpha-color($soft, 0.25);
+
+      &:hover {
+        border-color: alpha-color($electric, 0.5);
+        color: $electric;
+      }
+    }
+  }
+}
