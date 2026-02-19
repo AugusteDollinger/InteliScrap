@@ -1,10 +1,14 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app.services import userService
 from app.database import get_db
-from app.schemas import UserResponse, UsersListResponse
+from app.schemas import UserResponse, UsersListResponse, UserCreate, UserLogin, Token
+from app.security import create_access_token, get_current_user
+from app.models.user import User
+
 
 router = APIRouter()
+
 
 @router.get("/users", response_model=UsersListResponse)
 def read_users(db: Session = Depends(get_db)):
@@ -20,9 +24,31 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
     user = userService.get_user_by_id(db, user_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
+    return UserResponse.model_validate(user)
+
+
+@router.post("/auth/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
+def register(user_in: UserCreate, db: Session = Depends(get_db)):
+    existing = userService.get_user_by_email(db, user_in.email)
+    if existing:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered")
+    user = userService.create_user(db, email=user_in.email, username=user_in.username, password=user_in.password)
+    return UserResponse.model_validate(user)
+
+
+@router.post("/auth/login", response_model=Token)
+def login(credentials: UserLogin, db: Session = Depends(get_db)):
+    user = userService.authenticate_user(db, credentials.email, credentials.password)
+    if not user:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect email or password")
+    access_token = create_access_token({"sub": str(user.id), "role": user.role})
+    return {"access_token": access_token, "token_type": "bearer"}
+
+
+@router.get("/homepage")
+def homepage(current_user: User = Depends(get_current_user)):
     return {
-        "id": user.id,
-        "email": user.email,
-        "username": user.username,
-        "created_at": user.created_at.isoformat() if user.created_at else None
+        "message": "Welcome to InteliScrap",
+        "username": current_user.username,
+        "role": current_user.role,
     }
