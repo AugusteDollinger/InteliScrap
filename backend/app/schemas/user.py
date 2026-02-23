@@ -14,6 +14,16 @@ class UserLogin(BaseModel):
     password: str
 
 
+class UserUpdate(BaseModel):
+    email: Optional[str] = None
+    username: Optional[str] = None
+
+
+class PasswordChange(BaseModel):
+    current_password: str
+    new_password: str
+
+
 class UserResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: int

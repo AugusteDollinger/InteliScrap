@@ -18,9 +18,19 @@ function Navbar() {
       </NavLink>
       <div className="navbar__links">
         {token ? (
-          <button className="navbar__btn navbar__btn--outline" onClick={handleLogout}>
-            Logout
-          </button>
+          <>
+            <NavLink
+              to="/profile"
+              className={({ isActive }) =>
+                `navbar__link${isActive ? " navbar__link--active" : ""}`
+              }
+            >
+              Profile
+            </NavLink>
+            <button className="navbar__btn navbar__btn--outline" onClick={handleLogout}>
+              Logout
+            </button>
+          </>
         ) : (
           <>
             <NavLink

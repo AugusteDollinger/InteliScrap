@@ -1,0 +1,148 @@
+@use '../../styles.scss' as *;
+
+.profile {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 20px;
+	padding: 48px 16px 64px;
+
+	&__grid {
+		width: 100%;
+		max-width: 980px;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 20px;
+
+		.profile__card {
+			max-width: none;
+			flex: 1 1 320px;
+			min-width: 0;
+		}
+	}
+
+	&__card {
+		width: 100%;
+		max-width: 980px;
+		background: alpha-color($dark, 0.8);
+		border: 1px solid alpha-color($electric, 0.2);
+		border-radius: 12px;
+		padding: 32px;
+		backdrop-filter: blur(10px);
+
+		&--wide {
+			max-width: 980px;
+		}
+	}
+
+	&__title {
+		margin: 0 0 6px;
+		font-size: 1.6rem;
+		font-weight: 700;
+		color: $soft;
+	}
+
+	&__section-title {
+		margin: 0 0 16px;
+		font-size: 1.1rem;
+		font-weight: 600;
+		color: $soft;
+	}
+
+	&__subtitle {
+		margin: 0;
+		font-size: 0.9rem;
+		color: alpha-color($soft, 0.5);
+	}
+
+	&__hint {
+		margin: 0;
+		font-size: 0.9rem;
+		color: alpha-color($soft, 0.6);
+	}
+
+	&__form {
+		display: flex;
+		flex-direction: column;
+		gap: 18px;
+	}
+
+	&__field {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+	}
+
+	&__label {
+		font-size: 0.8rem;
+		font-weight: 500;
+		color: alpha-color($soft, 0.6);
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+	}
+
+	&__input {
+		padding: 10px 14px;
+		background: alpha-color($midnight, 0.8);
+		border: 1px solid alpha-color($electric, 0.15);
+		border-radius: 6px;
+		color: $soft;
+		font-size: 0.95rem;
+		outline: none;
+		transition: border-color 0.2s;
+
+		&::placeholder {
+			color: alpha-color($soft, 0.3);
+		}
+
+		&:focus {
+			border-color: alpha-color($electric, 0.5);
+		}
+	}
+
+	&__error {
+		margin: 0;
+		font-size: 0.85rem;
+		color: #f87171;
+	}
+
+	&__success {
+		margin: 0;
+		font-size: 0.85rem;
+		color: $success;
+	}
+
+	&__submit {
+		margin-top: 8px;
+		padding: 11px;
+		border: none;
+		border-radius: 6px;
+		font-size: 0.95rem;
+		font-weight: 600;
+		cursor: pointer;
+		@include cyber-gradient();
+		color: #fff;
+		transition: opacity 0.2s, transform 0.2s;
+
+		&:hover:not(:disabled) {
+			opacity: 0.9;
+			transform: translateY(-1px);
+		}
+
+		&:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+	}
+
+	&__link {
+		color: $electric;
+		text-decoration: none;
+		font-weight: 500;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+}

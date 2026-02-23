@@ -2,7 +2,15 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app.services import userService
 from app.database import get_db
-from app.schemas import UserResponse, UsersListResponse, UserCreate, UserLogin, Token
+from app.schemas import (
+    UserResponse,
+    UsersListResponse,
+    UserCreate,
+    UserLogin,
+    UserUpdate,
+    PasswordChange,
+    Token,
+)
 from app.security import create_access_token, get_current_user
 from app.models.user import User
 
@@ -19,12 +27,56 @@ def read_users(db: Session = Depends(get_db)):
     )
 
 
+@router.get("/users/me", response_model=UserResponse)
+def read_current_user(current_user: User = Depends(get_current_user)):
+    return UserResponse.model_validate(current_user)
+
+
 @router.get("/users/{user_id}", response_model=UserResponse)
 def read_user(user_id: int, db: Session = Depends(get_db)):
     user = userService.get_user_by_id(db, user_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return UserResponse.model_validate(user)
+
+
+@router.patch("/users/me", response_model=UserResponse)
+def update_current_user(
+    user_in: UserUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    if user_in.email and user_in.email != current_user.email:
+        existing = userService.get_user_by_email(db, user_in.email)
+        if existing:
+            raise HTTPException(status_code=400, detail="Email already registered")
+        current_user.email = user_in.email
+
+    if user_in.username and user_in.username != current_user.username:
+        existing = userService.get_user_by_username(db, user_in.username)
+        if existing:
+            raise HTTPException(status_code=400, detail="Username already taken")
+        current_user.username = user_in.username
+
+    db.add(current_user)
+    db.commit()
+    db.refresh(current_user)
+    return UserResponse.model_validate(current_user)
+
+
+@router.patch("/users/me/password", status_code=status.HTTP_204_NO_CONTENT)
+def update_password(
+    payload: PasswordChange,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    if not userService.verify_password(payload.current_password, current_user.hashed_password):
+        raise HTTPException(status_code=400, detail="Current password is incorrect")
+
+    current_user.hashed_password = userService.get_password_hash(payload.new_password)
+    db.add(current_user)
+    db.commit()
+    return
 
 
 @router.post("/auth/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
