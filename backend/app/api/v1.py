@@ -5,6 +5,7 @@ from app.database import get_db
 from app.schemas import UserResponse, UsersListResponse, UserCreate, UserLogin, Token
 from app.security import create_access_token, get_current_user
 from app.models.user import User
+from app.scrapers.amazon_parser import parse_amazon
 
 
 router = APIRouter()
@@ -51,4 +52,18 @@ def homepage(current_user: User = Depends(get_current_user)):
         "message": "Welcome to InteliScrap",
         "username": current_user.username,
         "role": current_user.role,
+    }
+
+
+@router.get("/scrape/amazon")
+def scrape_amazon(q: str):
+    query = q.strip()
+    if not query:
+        raise HTTPException(status_code=400, detail="Query cannot be empty")
+
+    results = parse_amazon(query=query)
+    return {
+        "query": query,
+        "count": len(results),
+        "items": results,
     }

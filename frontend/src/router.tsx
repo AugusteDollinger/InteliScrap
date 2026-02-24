@@ -3,12 +3,14 @@ import Layout from "./components/Layout/Layout";
 import Home from "./pages/home/Home";
 import Login from "./pages/auth/login/Login";
 import Register from "./pages/auth/register/Register";
+import Scrape from "./pages/scrape/Scrape";
 
 export const router = createBrowserRouter([
   {
     element: <Layout />,
     children: [
       { path: "/", element: <Home /> },
+      { path: "/scrape", element: <Scrape /> },
       { path: "/login", element: <Login /> },
       { path: "/register", element: <Register /> },
     ],
