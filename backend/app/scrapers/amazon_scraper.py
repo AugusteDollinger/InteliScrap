@@ -1,42 +1,60 @@
-from bs4 import BeautifulSoup
-from base_scraper import BaseScraper
-import json
+from urllib.parse import quote_plus
+from .base_scraper import BaseScraper
 
 class AmazonScraper(BaseScraper):
 
-    def __init__(self):
-        super().__init__(url="https://www.amazon.fr/s?k=wireless+headphones")
+    def __init__(self, query: str):
+        encoded_query = quote_plus(query.strip())
+        super().__init__(url=f"https://www.amazon.fr/s?k={encoded_query}")
 
-    def parse(self):
+    def parse_data(self):
         """Parse the Amazon search results page and extract product information."""
         products = []
         if not self.soup:
-            print("No soup to parse.")
             return products
-        
+
         for item in self.soup.find_all("div", {"data-component-type": "s-search-result"}):
-            title_tag = item.find("h2", attrs={"aria-label": True})
-            price_whole = item.find("span", class_="a-price-whole")
-            price_symbol = item.find("span", class_="a-price-symbol")
+            # Title is in h2
+            title_wrapper = item.find("h2")
+            if not title_wrapper:
+                continue
+            title_tag = title_wrapper.find("span")
+            if not title_tag:
+                continue
+            
+            # Link is a.s-no-outline in the item
+            link_tag = item.find("a", class_="s-no-outline")
+            if not link_tag:
+                continue
+            
+            # Price from a-offscreen span
+            price_full = item.select_one("span.a-offscreen")
+            
+            # Image from img tag
+            img_tag = item.find("img")
+            image_url = img_tag.get("src", "") if img_tag else ""
 
-            if title_tag and price_whole and price_symbol:
-                title = title_tag.get_text(strip=True)
-                symbol_text = price_symbol.get_text(strip=True)
-                whole_text = price_whole.get_text(strip=True)
-                price = f"{symbol_text}{whole_text}"
+            title = title_tag.get_text(strip=True)
+            link = link_tag.get("href", "")
+            if link and not link.startswith("http"):
+                link = f"https://www.amazon.fr{link}"
 
-                products.append({
-                    "title": title,
-                    "price": price
-                })
-        
+            price = price_full.get_text(strip=True) if price_full else ""
+            
+            # Extract currency symbol from price
+            currency = ""
+            if price:
+                for ch in price.strip():
+                    if not ch.isdigit() and ch not in [".", ",", " "]:
+                        currency = ch
+                        break
+
+            products.append({
+                "title": title,
+                "price": price,
+                "currency": currency,
+                "link": link,
+                "image": image_url,
+            })
+
         return products
-
-if __name__ == "__main__":
-    scraper = AmazonScraper()
-    try:
-        scraper.fetch_page()
-        data = scraper.parse()
-        print(json.dumps(data, indent=2, ensure_ascii=False))
-    except Exception as e:
-        print(f"Failed to connect to Amazon: {e}")
