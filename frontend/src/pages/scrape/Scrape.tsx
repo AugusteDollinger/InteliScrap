@@ -89,7 +89,15 @@ function Scrape() {
       </div>
 
       {status === "loading" && (
-        <div className="scrape__state">Scanning the marketplace...</div>
+        <div className="scrape__state scrape__state--loading">
+          <span className="scrape__spinner" aria-hidden="true" />
+          <span>Scanning the marketplace</span>
+          <span className="scrape__dots" aria-hidden="true">
+            <span>.</span>
+            <span>.</span>
+            <span>.</span>
+          </span>
+        </div>
       )}
 
       {status === "error" && (
