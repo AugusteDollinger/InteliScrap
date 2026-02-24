@@ -12,7 +12,7 @@ type HomepageData = {
 };
 
 function Home() {
-  const { token } = useAuth();
+  const { token, logout } = useAuth();
   const [homepageData, setHomepageData] = useState<HomepageData | null>(null);
 
   useEffect(() => {
@@ -24,7 +24,10 @@ function Home() {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(async (res) => {
-        if (!res.ok) throw new Error();
+        if (!res.ok) {
+          logout();
+          throw new Error("Failed to fetch homepage data");
+        }
         const data = (await res.json()) as HomepageData;
         setHomepageData(data);
       })
