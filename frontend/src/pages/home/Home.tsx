@@ -14,6 +14,7 @@ type HomepageData = {
 function Home() {
   const { token } = useAuth();
   const [homepageData, setHomepageData] = useState<HomepageData | null>(null);
+  const [query, setQuery] = useState("");
 
   useEffect(() => {
     if (!token) {
@@ -48,6 +49,10 @@ function Home() {
               Signed in as <strong>{homepageData.username}</strong>{" "}
               <span className="home__badge">{homepageData.role}</span>
             </p>
+            <div className="home__query">
+              <input className="home__query-input" type="text" placeholder="Enter your query..." value={query} onChange={(e) => setQuery(e.target.value)} />
+                <Link to={`/scrape?query=${query.split(" ").join("+")}`} className="home__query-btn">Start Scraping</Link>
+            </div>
           </div>
         ) : (
           <div className="home__actions">

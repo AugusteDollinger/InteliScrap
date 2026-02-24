@@ -9,7 +9,7 @@
 
   &__hero {
     text-align: center;
-    max-width: 640px;
+    max-width: 800px;
   }
 
   &__heading {
@@ -39,6 +39,51 @@
     gap: 14px;
     justify-content: center;
     flex-wrap: wrap;
+  }
+
+  &__query {
+    display: flex;
+    gap: 8px;
+    margin-top: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    &-input {
+      padding: 10px 14px;
+      border-radius: 6px;
+      border: 1px solid alpha-color($soft, 0.2);
+      background: transparent;
+      color: $soft;
+      font-size: 0.95rem;
+      width: 3/5*100%;
+
+      &:focus {
+        outline: none;
+        border-color: alpha-color($electric, 0.5);
+        box-shadow: 0 0 0 2px alpha-color($electric, 0.1);
+      }
+    }
+
+    &-btn {
+      @include cyber-gradient();
+      padding: 10px 20px;
+      border-radius: 6px;
+      color: #fff;
+      border: none;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      width: 1/4*100%;
+      text-decoration: none;
+      text-align: center;
+      margin: 0;
+
+      &:hover {
+        opacity: 0.88;
+        transform: translateY(-1px);
+      }
+    }
   }
 
   &__btn {
