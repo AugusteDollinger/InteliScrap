@@ -61,7 +61,11 @@ def scrape_amazon(q: str):
     if not query:
         raise HTTPException(status_code=400, detail="Query cannot be empty")
 
-    results = parse_amazon(query=query)
+    try:
+        results = parse_amazon(query=query)
+    except RuntimeError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+
     return {
         "query": query,
         "count": len(results),

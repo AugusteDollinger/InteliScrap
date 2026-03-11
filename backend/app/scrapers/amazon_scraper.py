@@ -7,11 +7,36 @@ class AmazonScraper(BaseScraper):
         encoded_query = quote_plus(query.strip())
         super().__init__(url=f"https://www.amazon.fr/s?k={encoded_query}")
 
+    def _is_block_page(self) -> bool:
+        if not self.soup:
+            return False
+
+        title = ""
+        if self.soup.title and self.soup.title.string:
+            title = self.soup.title.string.strip().lower()
+
+        body_text = self.soup.get_text(" ", strip=True).lower()
+        indicators = [
+            "toutes nos excuses",
+            "sorry! something went wrong",
+            "503 - service unavailable error",
+            "tut uns leid",
+            "erreur de système interne",
+            "internal system error",
+        ]
+
+        return any(marker in title or marker in body_text for marker in indicators)
+
     def parse_data(self):
         """Parse the Amazon search results page and extract product information."""
         products = []
         if not self.soup:
             return products
+
+        if self._is_block_page():
+            raise RuntimeError(
+                "Amazon blocked this request and returned an error page instead of search results."
+            )
 
         for item in self.soup.find_all("div", {"data-component-type": "s-search-result"}):
             # Title is in h2
