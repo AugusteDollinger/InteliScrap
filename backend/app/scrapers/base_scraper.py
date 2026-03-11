@@ -1,5 +1,6 @@
 from playwright.sync_api import sync_playwright
 from bs4 import BeautifulSoup
+from urllib.parse import urlparse
 import time, random
 
 class BaseScraper:
@@ -9,8 +10,10 @@ class BaseScraper:
 
     def fetch(self, url):
         """Fetch a URL using Playwright and return a simple response-like object."""
+        parsed_url = urlparse(url)
+        origin = f"{parsed_url.scheme}://{parsed_url.netloc}" if parsed_url.scheme and parsed_url.netloc else "https://www.amazon.fr"
+
         with sync_playwright() as p:
-            # Use chromium args to avoid detection
             browser = p.chromium.launch(
                 headless=True,
                 args=[
@@ -22,24 +25,21 @@ class BaseScraper:
                 user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
                 viewport={"width": 1920, "height": 1080}
             )
-            # Stealth: hide that this is an automated browser
             page.add_init_script("""
                 Object.defineProperty(navigator, 'webdriver', {
                     get: () => false,
                 });
             """)
-            # Add more realistic headers
             page.set_extra_http_headers({
-                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-                "Accept-Language": "en-US,en;q=0.5",
-                "Accept-Encoding": "gzip, deflate",
-                "Referer": "https://www.amazon.com/",
-                "DNT": "1",
-                "Connection": "keep-alive",
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+                "Accept-Language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7",
+                "Referer": f"{origin}/",
                 "Upgrade-Insecure-Requests": "1",
                 "Sec-Fetch-Dest": "document",
                 "Sec-Fetch-Mode": "navigate",
                 "Sec-Fetch-Site": "none",
+                "Sec-Fetch-User": "?1",
+                "Cache-Control": "max-age=0",
             })
             page.goto(url, wait_until="load", timeout=60000)
             time.sleep(random.uniform(3, 5))

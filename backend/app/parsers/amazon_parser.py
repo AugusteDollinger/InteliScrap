@@ -1,4 +1,4 @@
-from .amazon_scraper import AmazonScraper
+from app.scrapers.amazon_scraper import AmazonScraper
 
 
 def parse_amazon(query: str):
