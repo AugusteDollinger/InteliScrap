@@ -236,7 +236,3 @@ La roadmap suit le découpage **Démo 1 → 4** de la checklist et place en têt
 3. 🔴 **Créer la CI/CD** (`.github/workflows`) — 0/5 DevOps, bloquant Bloc 3.
 4. 🟠 **Autorisation par rôle** (back + front) — le rôle existe mais n'est jamais vérifié.
 5. 🟠 **Charte graphique + maquettes** — 0/12 sur l'UI design, livrables Démo 1.
-
----
-
-*Audit généré pour servir de base de travail. Les statuts reflètent l'état de `main` à la date indiquée ; certains points (README/Docker) sont déjà adressés dans la PR #35.*
