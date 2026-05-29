@@ -43,7 +43,9 @@ services:
       POSTGRES_PASSWORD: inteliscrap_password
       POSTGRES_DB: inteliscrap_db
     ports:
-      - "5432:5432"
+      # Host 5433 -> container 5432 to avoid clashing with a local Postgres.
+      # The backend reaches the DB via the internal network (postgres:5432).
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data/
 
